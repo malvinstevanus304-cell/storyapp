@@ -2,7 +2,7 @@
 // Service Worker Final + Push + API POST Notif (Path Relatif untuk GitHub Pages)
 // ===============================
 
-const CACHE_NAME = "story-app-cache-v9"; // ganti versi biar cache lama clear
+const CACHE_NAME = "story-app-cache-v10"; // update versi biar cache lama clear
 const urlsToCache = [
   "./",
   "./index.html",
@@ -46,13 +46,17 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(req.clone())
         .then((res) => {
-          // Setelah sukses POST, munculkan notif
-          self.registration.showNotification("Story App", {
-            body: "Data berhasil dikirim ke server!",
-            icon: "./images/logo.png",
-            badge: "./images/logo.png",
-            vibrate: [100, 50, 100],
-          });
+          // Setelah sukses POST, munculkan notif hanya jika izin granted
+          if (Notification.permission === "granted") {
+            self.registration.showNotification("Story App", {
+              body: "Data berhasil dikirim ke server!",
+              icon: "./images/logo.png",
+              badge: "./images/logo.png",
+              vibrate: [100, 50, 100],
+            });
+          } else {
+            console.warn("[SW] Notifikasi tidak diizinkan, skip showNotification");
+          }
           return res;
         })
         .catch((err) => {
@@ -96,9 +100,14 @@ self.addEventListener("push", (event) => {
     ],
   };
 
-  event.waitUntil(
-    self.registration.showNotification(data.title || "Story App", options)
-  );
+  // Cek permission sebelum showNotification
+  if (Notification.permission === "granted") {
+    event.waitUntil(
+      self.registration.showNotification(data.title || "Story App", options)
+    );
+  } else {
+    console.warn("[SW] Push diterima tapi notifikasi tidak diizinkan user");
+  }
 });
 
 // Notification click
