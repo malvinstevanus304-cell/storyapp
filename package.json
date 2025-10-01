@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "start-dev": "webpack serve --config webpack.dev.js --open",
-    "serve": "http-server-dist"
-  },
+  "build": "webpack --config webpack.prod.js",
+  "start-dev": "webpack serve --config webpack.dev.js --open",
+  "serve": "http-server dist",
+  "deploy": "npm run build && rmdir /s /q docs && xcopy dist docs /E /I /Y"
+},
   "keywords": [],
   "author": "YOUR_NAME <yourmail@mail.com>",
   "license": "ISC",
