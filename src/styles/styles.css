@@ -1,0 +1,800 @@
+/* ===========================
+   RESET & BASE
+=========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.5;
+  background-color: #f5f5f5;
+  color: #1f2937;
+  transition: background-color 0.4s, color 0.4s;
+}
+
+/* ===========================
+   CONTAINER
+=========================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* ===========================
+   SKIP LINK
+=========================== */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 12px;
+  z-index: 100;
+  border-radius: 4px;
+  transition: top 0.3s ease, background 0.3s;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0;
+  background: #1f2937;
+  outline: 2px solid #fff;
+}
+
+/* ===========================
+   HEADER & NAV
+=========================== */
+header {
+  background-color: #aeb10a;
+  box-shadow: 0 2px 6px rgba(12, 12, 12, 0.15);
+  transition: background-color 0.3s;
+}
+.main-header {
+  min-height: 90px;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+.brand-name {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+}
+.logo {
+  width: 40px;
+  margin-right: 8px;
+}
+
+/* NAVIGATION DRAWER */
+.navigation-drawer {
+  min-height: 100vh;
+  width: 220px;
+  padding: 20px 15px;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  transform: translateX(-110%);
+  transition: transform 0.35s ease-in-out;
+  z-index: 9999;
+  border-radius: 0 8px 8px 0;
+}
+.navigation-drawer.open {
+  transform: translateX(0);
+}
+.drawer-button {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background-color: #3b82f6;
+  font-weight: bold;
+  font-size: 28px;
+  color: #fff;
+  cursor: pointer;
+}
+.drawer-button:hover {
+  background-color: #2563eb;
+  transform: scale(1.1);
+}
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nav-list li a {
+  padding: 8px 12px;
+  display: block;
+  color: #1f2937;
+  text-decoration: none;
+  border-radius: 6px;
+}
+.nav-list li a:hover {
+  background-color: #3ead22;
+  color: #fff;
+}
+
+/* ===========================
+   MAIN CONTENT
+=========================== */
+.main-content {
+  padding: 24px;
+}
+.page {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.page.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Keyframes untuk efek fade + geser */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===========================
+   HERO SECTION
+=========================== */
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.hero__title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+.hero__subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+}
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #1f2937;
+}
+
+/* ===========================
+   FORMS & INPUTS
+=========================== */
+form {
+  max-width: 500px;
+  margin: 20px auto; /* auto = center horizontal */
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+form div {
+  margin-bottom: 16px;
+}
+form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+}
+form input,
+form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+form input:focus,
+form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+}
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.form-message {
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #10b981;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+}
+button:active {
+  transform: translateY(0);
+}
+
+/* ===========================
+   STORY LIST & CARDS
+=========================== */
+.stories-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 20px;
+}
+.story-item {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.story-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.story-item img {
+  width: 100%;
+  object-fit: cover;
+  height: 180px;
+}
+.story-item__content {
+  padding: 12px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ===========================
+   VIDEO & CANVAS
+=========================== */
+#camera-preview img {
+  width: 200px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+video, canvas, #map {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+}
+#map {
+  height: 300px;
+}
+canvas {
+  display: none;
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+.footer {
+  background: #0d0d0e;
+  color: #d8ce3f;
+  text-align: center;
+  padding: 16px;
+  margin-top: 40px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media screen and (min-width: 1000px) {
+  .navigation-drawer {
+    min-height: auto;
+    width: auto;
+    padding: 0;
+    background-color: transparent;
+    flex-direction: row;
+    justify-content: space-between;
+    position: static;
+    box-shadow: none;
+    transform: translateX(0);
+  }
+  .nav-list {
+    flex-direction: row;
+  }
+  .nav-list li a {
+    display: inline-block;
+  }
+  .drawer-button {
+    display: none;
+  }
+  /* Layout biar footer tetap di bawah */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1; /* isi utama dorong footer ke bawah */
+}
+
+.footer {
+  margin-top: auto; /* footer selalu paling bawah */
+}
+
+.about-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  line-height: 1.7;
+}
+
+.about-content h2 {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  color: #a56632;
+}
+
+.about-content ul {
+  margin: 12px 0 0 20px;
+  list-style: disc;
+}
+
+/* MAP PAGE */
+.map-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* STORY LIST GRID */
+.map-stories {
+  flex: 2;
+}
+.stories-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+  list-style: none;
+  padding: 0;
+}
+.story-item {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.story-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+.story-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+.story-item__content {
+  padding: 10px 12px;
+}
+.story-item__content h3 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  color: #333;
+}
+.story-item__content p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+/* MAP BOX */
+.map-view {
+  flex: 1;
+  min-width: 320px;
+}
+#map {
+  height: 300px;              /* lebih kecil */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* MESSAGE */
+.map-message {
+  margin-top: 20px;
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 768px) {
+  .map-container {
+    flex-direction: column;
+  }
+  .map-view {
+    order: -1; /* tampilkan peta di atas daftar story */
+  }
+}
+
+/* FORM ADD STORY */
+.story-form {
+  margin-top: 20px;
+}
+#video {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+#camera-preview img {
+  width: 200px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+.add-map {
+  margin-top: 10px;
+  height: 250px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.preview-box {
+  width: 100%;
+  max-width: 250px;
+  height: 180px;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  margin-top: 8px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.add-map {
+  height: 300px;
+  margin-top: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.auth-form {
+  max-width: 350px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.btn-primary {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  width: 100%;
+}
+
+.global-error {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: #ff4d4f;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.global-error.fade-out {
+  opacity: 0;
+}
+
+/* ===========================
+   VIEW TRANSITION
+=========================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
+}
+
+/* Container kamera */
+#camera-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+/* Video kamera */
+#camera-container video {
+  width: 100%;
+  border-radius: 10px;
+  background: #000;
+  object-fit: cover;
+}
+
+/* Tombol overlay 📸 */
+#snap-btn {
+  display: none; /* muncul saat Ambil Gambar ditekan */
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;
+  padding: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: transform 0.1s ease;
+}
+
+#snap-btn:active {
+  transform: translateX(-50%) scale(0.9);
+}
+
+/* Preview kamera */
+#camera-preview {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  min-height: 200px;
+  margin-top: 10px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f7f7f7;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Preview image */
+#camera-preview img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Tombol close hanya silang merah */
+.close-preview-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 24px;
+  color: red;          /* merah */
+  background: transparent; /* transparan */
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+/* Hover sedikit lebih jelas */
+.close-preview-btn:hover {
+  color: darkred;
+}
+
+
+/* Tombol Ambil Gambar */
+#capture-btn {
+  margin-top: 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  transition: background 0.2s;
+}
+
+#capture-btn:hover {
+  background-color: #45a049;
+}
+
+#toggle-push {
+  margin: 10px 0;
+  background-color: #f59e0b;
+  color: #fff;
+  font-weight: bold;
+}
+#toggle-push:hover {
+  background-color: #d97706;
+}
+
+/* ==============================
+   Tombol Subscribe / Unsubscribe
+   Navbar
+============================== */
+#nav-push button {
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  color: #fff;
+  min-width: 90px;
+}
+
+/* Warna tombol saat Subscribe */
+#nav-push button.subscribe {
+  background-color: #f59e0b; /* oranye */
+}
+
+#nav-push button.subscribe:hover {
+  background-color: #d97706;
+  transform: scale(1.05);
+}
+
+/* Warna tombol saat Unsubscribe */
+#nav-push button.unsubscribe {
+  background-color: #10b981; /* hijau */
+}
+
+#nav-push button.unsubscribe:hover {
+  background-color: #059669;
+  transform: scale(1.05);
+}
+
+/* Fokus keyboard */
+#nav-push button:focus {
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
+
+/* Responsive navbar */
+@media screen and (max-width: 768px) {
+  #nav-push button {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+}
+
+.stories-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.story-card {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.story-card:hover {
+  transform: translateY(-5px);
+}
+
+.story-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.story-card__content {
+  padding: 0.5rem 1rem 1rem 1rem;
+}
+
+.love-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.love-btn:hover {
+  transform: scale(1.2);
+}
+.story-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.love-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.love-btn:hover {
+  transform: scale(1.2);
+}
+
+}

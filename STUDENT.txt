@@ -1,0 +1,47 @@
+========================================
+Dicoding Submission - Story App
+========================================
+
+Nama  : Malvin Stevanus
+ID    : (F891D5Y1065)
+Kelas : Belajar Fundamental Aplikasi Web dengan JavaScript
+
+========================================
+Kriteria 5: Dokumentasi Proyek
+========================================
+
+Hasil Github Deploy:
+https://malvinstevanus304-cell.github.io/Dicoding-Story-App/#/
+
+Cara Menjalankan Project:
+1. GIt Deploy:
+   git  deploy : https://malvinstevanus304-cell.github.io/Dicoding-Story-App/#/
+
+2. Masuk ke folder project:
+   cd Dicoding-Story-App
+
+3. Install dependencies:
+   npm install
+
+4. Build aplikasi (jika perlu):
+   npm run build
+
+5. Jalankan aplikasi:
+   npm run start-dev
+
+========================================
+Fitur Utama:
+- Login & Register user
+- Upload cerita dengan foto
+- Menampilkan daftar cerita (Story List)
+- Detail cerita
+- Map lokasi cerita
+- Push Notification (subscribe & unsubscribe)
+- Offline support dengan Service Worker + Cache
+
+========================================
+Catatan:
+- Aplikasi ini menggunakan API Dicoding Story:
+  https://story-api.dicoding.dev/v1/
+- Pastikan token login valid sebelum mengakses endpoint.
+- VAPID Public Key dari Dicoding digunakan untuk Push Notification.

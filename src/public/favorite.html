@@ -1,0 +1,43 @@
+<section class="container page">
+  <div class="hero">
+    <h1 class="hero__title">💖 Cerita Favorit</h1>
+    <p class="hero__subtitle">Daftar story yang sudah kamu simpan</p>
+  </div>
+
+  <div id="favorites" class="stories-list"></div>
+</section>
+
+<script type="module">
+import { getFavorites, removeFavorite } from '../../utils/favorite.js';
+
+const container = document.querySelector('#favorites');
+
+async function renderFavorites() {
+  const stories = await getFavorites();
+  if (!stories.length) {
+    container.innerHTML = '<p style="text-align:center;">Belum ada cerita favorit</p>';
+    return;
+  }
+
+  container.innerHTML = stories.map(s => `
+    <div class="story-item">
+      <img src="${s.photoUrl}" alt="Foto ${s.name}">
+      <div class="story-item__content">
+        <h3>${s.name}</h3>
+        <p>${s.description}</p>
+        <small>📅 ${new Date(s.createdAt).toLocaleString()}</small>
+      </div>
+      <button class="remove-btn" data-id="${s.id}" title="Hapus dari favorit">💔</button>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await removeFavorite(btn.dataset.id);
+      renderFavorites(); // re-render setelah hapus
+    });
+  });
+}
+
+renderFavorites();
+</script>
