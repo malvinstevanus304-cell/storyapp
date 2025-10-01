@@ -1,14 +1,14 @@
 // ===============================
-// Service Worker Final + Push + API POST Notif
+// Service Worker Final + Push + API POST Notif (Path Relatif untuk GitHub Pages)
 // ===============================
 
-const CACHE_NAME = "story-app-cache-v7";
+const CACHE_NAME = "story-app-cache-v9"; // ganti versi biar cache lama clear
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/offline.html",
-  "/app.bundle.js",
-  "/images/logo.png",
+  "./",
+  "./index.html",
+  "./offline.html",
+  "./app.bundle.js",
+  "./images/logo.png",
 ];
 
 // Install
@@ -37,7 +37,7 @@ self.addEventListener("fetch", (event) => {
 
   // Navigasi → network-first fallback offline.html
   if (req.mode === "navigate") {
-    event.respondWith(fetch(req).catch(() => caches.match("/offline.html")));
+    event.respondWith(fetch(req).catch(() => caches.match("./offline.html")));
     return;
   }
 
@@ -49,8 +49,8 @@ self.addEventListener("fetch", (event) => {
           // Setelah sukses POST, munculkan notif
           self.registration.showNotification("Story App", {
             body: "Data berhasil dikirim ke server!",
-            icon: "/images/logo.png",
-            badge: "/images/logo.png",
+            icon: "./images/logo.png",
+            badge: "./images/logo.png",
             vibrate: [100, 50, 100],
           });
           return res;
@@ -80,16 +80,16 @@ self.addEventListener("push", (event) => {
     try {
       data = event.data.json();
     } catch {
-      data = { title: "Story App", message: event.data.text(), url: "/" };
+      data = { title: "Story App", message: event.data.text(), url: "./" };
     }
   }
 
   const options = {
     body: data.message || "Anda mendapat notifikasi baru!",
-    icon: "/images/logo.png",
-    badge: "/images/logo.png",
+    icon: "./images/logo.png",
+    badge: "./images/logo.png",
     vibrate: [100, 50, 100],
-    data: { url: data.url || "/" },
+    data: { url: data.url || "./" },
     actions: [
       { action: "open", title: "Buka Aplikasi" },
       { action: "close", title: "Tutup" },
@@ -109,6 +109,6 @@ self.addEventListener("notificationclick", (event) => {
   } else if (event.action === "close") {
     // do nothing
   } else {
-    event.waitUntil(clients.openWindow("/"));
+    event.waitUntil(clients.openWindow("./"));
   }
 });
