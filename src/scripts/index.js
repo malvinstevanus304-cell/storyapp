@@ -12,9 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await app.renderPage();
 
-  window.addEventListener('hashchange', async () => {
-    await app.renderPage();
-  });
+  window.addEventListener('hashchange', async () => await app.renderPage());
 
   // -----------------------------
   // Register Service Worker
@@ -22,21 +20,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   let registration = null;
   if ('serviceWorker' in navigator) {
     try {
-      registration = await navigator.serviceWorker.register('./sw.js'); // relative path agar compatible GitHub Pages
-      console.log('[SW] Service Worker registered:', registration);
-      await navigator.serviceWorker.ready;
+      registration = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+      console.log('[SW] Service Worker registered:', registration.scope);
+
       registration = await navigator.serviceWorker.ready;
-      console.log('[SW] Service Worker ready:', registration);
+      console.log('[SW] Service Worker ready:', registration.scope);
     } catch (err) {
       console.error('[SW] Failed to register Service Worker:', err);
     }
   }
 
-  // Tombol nav subscribe/unsubscribe
+  // Tombol subscribe/unsubscribe
   const notifToggle = document.getElementById('push-toggle');
-
   if (!notifToggle) {
-    console.error('[Push] Tombol push-toggle tidak ditemukan di DOM!');
+    console.error('[Push] Tombol push-toggle tidak ditemukan!');
     return;
   }
 
@@ -49,16 +46,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       const token = localStorage.getItem('api_token') || null;
 
       if (!token) {
-        console.warn('[Push] Token belum tersedia, tombol Subscribe tidak bisa digunakan');
         notifToggle.disabled = true;
         notifToggle.textContent = 'Login dahulu';
+        console.warn('[Push] Token belum ada, tombol tidak aktif');
       } else if (currentSub) {
-        console.log('[Push] Sudah ada subscription aktif:', currentSub);
         notifToggle.textContent = 'Unsubscribe';
         notifToggle.classList.remove('subscribe');
         notifToggle.classList.add('unsubscribe');
       } else {
-        console.log('[Push] Belum ada subscription aktif');
         notifToggle.textContent = 'Subscribe';
         notifToggle.classList.remove('unsubscribe');
         notifToggle.classList.add('subscribe');
@@ -89,21 +84,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       const subscription = await registration.pushManager.getSubscription();
 
       if (subscription) {
-        console.log('[Push] Ada subscription aktif, proses unsubscribe...');
         await unsubscribePush(registration);
         notifToggle.textContent = 'Subscribe';
         notifToggle.classList.remove('unsubscribe');
         notifToggle.classList.add('subscribe');
       } else {
-        console.log('[Push] Belum ada subscription, coba subscribe...');
         const result = await subscribePush(registration);
         if (result) {
-          console.log('[Push] Subscription berhasil:', result);
           notifToggle.textContent = 'Unsubscribe';
           notifToggle.classList.remove('subscribe');
           notifToggle.classList.add('unsubscribe');
-        } else {
-          console.warn('[Push] Subscription gagal atau dibatalkan user');
         }
       }
     } catch (err) {

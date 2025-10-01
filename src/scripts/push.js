@@ -5,70 +5,46 @@ function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = window.atob(base64);
-  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+  return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)));
 }
 
 export async function subscribePush(registration) {
-  const vapidPublicKey =
-    "BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk";
-  const convertedKey = urlBase64ToUint8Array(vapidPublicKey);
+  const vapidKey = "BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk";
+  const applicationServerKey = urlBase64ToUint8Array(vapidKey);
 
   try {
-    console.log('[Push] Permission notifikasi saat ini:', Notification.permission);
-
     if (Notification.permission === 'default') {
-      console.log('[Push] Request permission...');
       const permission = await Notification.requestPermission();
-      console.log('[Push] Hasil requestPermission:', permission);
-      if (permission !== 'granted') {
-        alert('⚠️ Notifikasi tidak diizinkan browser.');
-        return null;
-      }
+      if (permission !== 'granted') return null;
     } else if (Notification.permission === 'denied') {
       alert('⚠️ Notifikasi diblokir. Ubah pengaturan browser.');
       return null;
     }
 
     const token = getToken();
-    if (!token) {
-      console.error('[Push] Token tidak ditemukan, abort!');
-      return null;
-    }
+    if (!token) return null;
 
-    // Subscribe
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: convertedKey,
+      applicationServerKey,
     });
 
-    console.log('✅ Subscribed ke push manager:', subscription);
-
-    // POST ke Dicoding API
-    const response = await fetch('https://story-api.dicoding.dev/v1/notifications/subscribe', {
+    await fetch('https://story-api.dicoding.dev/v1/notifications/subscribe', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({
         endpoint: subscription.endpoint,
         keys: {
-          p256dh: subscription.getKey('p256dh')
-            ? btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh'))))
-            : '',
-          auth: subscription.getKey('auth')
-            ? btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth'))))
-            : '',
+          p256dh: subscription.getKey('p256dh') ? btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')))) : '',
+          auth: subscription.getKey('auth') ? btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth')))) : '',
         },
       }),
     });
 
-    const result = await response.json();
-    console.log('[Push] Response API subscribe:', result);
-
+    console.log('[Push] Subscribed:', subscription);
     return subscription;
   } catch (err) {
-    console.error('❌ Gagal subscribe:', err);
+    console.error('[Push] Subscribe failed:', err);
     return null;
   }
 }
@@ -76,34 +52,20 @@ export async function subscribePush(registration) {
 export async function unsubscribePush(registration) {
   try {
     const subscription = await registration.pushManager.getSubscription();
-    if (!subscription) {
-      console.warn('[Push] Tidak ada subscription aktif.');
-      return;
-    }
+    if (!subscription) return;
 
     const token = getToken();
-    if (!token) {
-      console.error('[Push] Token tidak ditemukan, abort!');
-      return;
-    }
+    if (!token) return;
 
-    // DELETE ke Dicoding API
-    const response = await fetch('https://story-api.dicoding.dev/v1/notifications/subscribe', {
+    await fetch('https://story-api.dicoding.dev/v1/notifications/subscribe', {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ endpoint: subscription.endpoint }),
     });
 
-    const result = await response.json();
-    console.log('[Push] Response API unsubscribe:', result);
-
-    // Hapus subscription browser
     await subscription.unsubscribe();
-    alert('🔔 Push notification dinonaktifkan untuk aplikasi ini.');
+    alert('🔔 Push notification dinonaktifkan.');
   } catch (err) {
-    console.error('❌ Gagal unsubscribe:', err);
+    console.error('[Push] Unsubscribe failed:', err);
   }
 }

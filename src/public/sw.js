@@ -2,7 +2,7 @@
 // Service Worker Final + Push + API POST Notif (Path Relatif untuk GitHub Pages)
 // ===============================
 
-const CACHE_NAME = "story-app-cache-v10"; // update versi biar cache lama clear
+const CACHE_NAME = "story-app-cache-v10";
 const urlsToCache = [
   "./",
   "./index.html",
@@ -10,6 +10,7 @@ const urlsToCache = [
   "./app.bundle.js",
   "./images/logo.png",
 ];
+
 
 // Install
 self.addEventListener("install", (event) => {
