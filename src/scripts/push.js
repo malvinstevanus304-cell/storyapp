@@ -8,6 +8,7 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)));
 }
 
+// ==== Original fetch Dicoding API functions ====
 export async function subscribePush(registration) {
   const vapidKey = "BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk";
   const applicationServerKey = urlBase64ToUint8Array(vapidKey);
@@ -68,4 +69,24 @@ export async function unsubscribePush(registration) {
   } catch (err) {
     console.error('[Push] Unsubscribe failed:', err);
   }
+}
+
+// ==== Wrapper functions untuk app.js ====
+export async function isCurrentPushSubscriptionAvailable() {
+  if (!('serviceWorker' in navigator)) return false;
+  const registration = await navigator.serviceWorker.ready;
+  const subscription = await registration.pushManager.getSubscription();
+  return !!subscription;
+}
+
+export async function subscribe() {
+  if (!('serviceWorker' in navigator)) return null;
+  const registration = await navigator.serviceWorker.ready;
+  return subscribePush(registration);
+}
+
+export async function unsubscribe() {
+  if (!('serviceWorker' in navigator)) return null;
+  const registration = await navigator.serviceWorker.ready;
+  return unsubscribePush(registration);
 }

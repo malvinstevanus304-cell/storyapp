@@ -1,124 +1,38 @@
 // ===============================
-// Service Worker Final + Push + API POST Notif (Path Relatif untuk GitHub Pages)
+// Service Worker: Push Notification Only
 // ===============================
 
-const CACHE_NAME = "story-app-cache-v10";
-const urlsToCache = [
-  "./",
-  "./index.html",
-  "./offline.html",
-  "./app.bundle.js",
-  "./images/logo.png",
-];
+self.addEventListener('push', (event) => {
+  console.log('[SW] Push received');
 
+  async function showNotification() {
+    let data = { title: 'Notifikasi', options: { body: 'Ada pesan baru' } };
 
-// Install
-self.addEventListener("install", (event) => {
-  console.log("[SW] Install event");
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
-  );
-});
-
-// Activate
-self.addEventListener("activate", (event) => {
-  console.log("[SW] Activate event");
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
-      )
-    )
-  );
-});
-
-// Fetch
-self.addEventListener("fetch", (event) => {
-  const req = event.request;
-
-  // Navigasi → network-first fallback offline.html
-  if (req.mode === "navigate") {
-    event.respondWith(fetch(req).catch(() => caches.match("./offline.html")));
-    return;
-  }
-
-  // Intercept POST ke API tertentu
-  if (req.method === "POST" && req.url.includes("/api/")) {
-    event.respondWith(
-      fetch(req.clone())
-        .then((res) => {
-          // Setelah sukses POST, munculkan notif hanya jika izin granted
-          if (Notification.permission === "granted") {
-            self.registration.showNotification("Story App", {
-              body: "Data berhasil dikirim ke server!",
-              icon: "./images/logo.png",
-              badge: "./images/logo.png",
-              vibrate: [100, 50, 100],
-            });
-          } else {
-            console.warn("[SW] Notifikasi tidak diizinkan, skip showNotification");
-          }
-          return res;
-        })
-        .catch((err) => {
-          console.error("[SW] POST gagal:", err);
-          return new Response(
-            JSON.stringify({ error: "Tidak bisa kirim data" }),
-            { status: 500, headers: { "Content-Type": "application/json" } }
-          );
-        })
-    );
-    return;
-  }
-
-  // Cache-first untuk asset lain
-  event.respondWith(
-    caches.match(req).then((res) => res || fetch(req))
-  );
-});
-
-// Push
-self.addEventListener("push", (event) => {
-  console.log("[SW] Push event:", event);
-  let data = {};
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch {
-      data = { title: "Story App", message: event.data.text(), url: "./" };
+    if (event.data) {
+      try {
+        // Coba parse JSON
+        data = await event.data.json();
+      } catch {
+        // Kalau bukan JSON, ambil sebagai string biasa
+        data = {
+          title: 'Notifikasi',
+          options: { body: event.data.text() },
+        };
+      }
     }
+
+    await self.registration.showNotification(data.title, {
+      body: data.options.body,
+      icon: data.options.icon || './images/logo.png',
+      badge: data.options.badge || './images/logo.png',
+    });
   }
 
-  const options = {
-    body: data.message || "Anda mendapat notifikasi baru!",
-    icon: "./images/logo.png",
-    badge: "./images/logo.png",
-    vibrate: [100, 50, 100],
-    data: { url: data.url || "./" },
-    actions: [
-      { action: "open", title: "Buka Aplikasi" },
-      { action: "close", title: "Tutup" },
-    ],
-  };
-
-  // Cek permission sebelum showNotification
-  if (Notification.permission === "granted") {
-    event.waitUntil(
-      self.registration.showNotification(data.title || "Story App", options)
-    );
-  } else {
-    console.warn("[SW] Push diterima tapi notifikasi tidak diizinkan user");
-  }
+  event.waitUntil(showNotification());
 });
 
-// Notification click
-self.addEventListener("notificationclick", (event) => {
+// Optional: klik notifikasi
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  if (event.action === "open" && event.notification.data?.url) {
-    event.waitUntil(clients.openWindow(event.notification.data.url));
-  } else if (event.action === "close") {
-    // do nothing
-  } else {
-    event.waitUntil(clients.openWindow("./"));
-  }
+  event.waitUntil(clients.openWindow(event.notification.data?.url || './'));
 });

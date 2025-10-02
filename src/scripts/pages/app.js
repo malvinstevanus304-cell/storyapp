@@ -1,6 +1,16 @@
+// src/scripts/pages/app.js
 import routes from '../routes/routes.js';
 import { getActiveRoute } from '../routes/url-parser.js';
 import { getToken, clearToken } from '../utils/auth.js';
+import {
+  isCurrentPushSubscriptionAvailable,
+  subscribepush,
+  unsubscribepush,
+} from '../push.js'; // path relatif sudah sesuai
+import {
+  generateSubscribeButtonTemplate,
+  generateUnsubscribeButtonTemplate,
+} from '../templates.js'; // path relatif sudah sesuai
 
 class App {
   #content;
@@ -49,6 +59,11 @@ class App {
     }
 
     this._updateNavigation(token);
+
+    // Setup push notification jika service worker tersedia
+    if ('serviceWorker' in navigator) {
+      this.#setupPushNotification();
+    }
   }
 
   _updateNavigation(token) {
@@ -80,6 +95,42 @@ class App {
         window.location.hash = '#/login';
       }
     });
+  }
+
+  // ==========================
+  // PUSH NOTIFICATION SETUP
+  // ==========================
+  async #setupPushNotification() {
+    const pushTools = document.getElementById('push-notification-tools');
+    if (!pushTools) return;
+
+    let isSubscribed = false;
+    try {
+      isSubscribed = await isCurrentPushSubscriptionAvailable();
+    } catch (err) {
+      console.warn('[Push] Cek subscription gagal:', err);
+    }
+
+    if (isSubscribed) {
+      pushTools.innerHTML = generateUnsubscribeButtonTemplate();
+      const unsubscribeBtn = document.getElementById('unsubscribe-button');
+      if (unsubscribeBtn) {
+        unsubscribeBtn.addEventListener('click', async () => {
+          await unsubscribe();
+          this.#setupPushNotification();
+        });
+      }
+      return;
+    }
+
+    pushTools.innerHTML = generateSubscribeButtonTemplate();
+    const subscribeBtn = document.getElementById('subscribe-button');
+    if (subscribeBtn) {
+      subscribeBtn.addEventListener('click', async () => {
+        await subscribe();
+        this.#setupPushNotification();
+      });
+    }
   }
 }
 

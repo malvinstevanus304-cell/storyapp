@@ -11,7 +11,7 @@ Kriteria 5: Dokumentasi Proyek
 ========================================
 
 Hasil Github Deploy:
-https://malvinstevanus304-cell.github.io/Dicoding-Story-App/#/
+https://malvinstevanus304-cell.github.io/storyapp/#/login
 
 Cara Menjalankan Project:
 1. GIt Deploy:
