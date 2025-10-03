@@ -5,7 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: {
     app: path.resolve(__dirname, 'src/scripts/index.js'),
-    sw: path.resolve(__dirname, 'src/public/sw.js'),
+    // ❌ jangan daftarin sw di sini, karena InjectManifest sudah handle
   },
   output: {
     filename: '[name].bundle.js',
@@ -26,7 +26,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/index.html'),
-      excludeChunks: ['sw'],
+      // excludeChunks: ['sw'], // ❌ tidak perlu lagi
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -34,7 +34,7 @@ module.exports = {
           from: path.resolve(__dirname, 'src/public'),
           to: path.resolve(__dirname, 'dist'),
           globOptions: {
-            ignore: ['**/sw.js'],
+            ignore: ['**/sw.js'], // biar SW asli nggak di-copy ke dist
           },
         },
       ],

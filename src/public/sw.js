@@ -1,7 +1,32 @@
 // ===============================
-// Service Worker: Push Notification with Actions
+// Service Worker (Workbox + Push Notification with Actions)
 // ===============================
 
+import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+
+// Precache asset hasil build (diisi otomatis sama InjectManifest)
+precacheAndRoute(self.__WB_MANIFEST || []);
+
+// Contoh runtime caching (sesuaikan kebutuhan)
+registerRoute(
+  ({ request }) => request.destination === 'image',
+  new CacheFirst({
+    cacheName: 'images-cache',
+    plugins: [new CacheableResponsePlugin({ statuses: [0, 200] })],
+  })
+);
+
+registerRoute(
+  ({ request }) => request.destination === 'script' || request.destination === 'style',
+  new StaleWhileRevalidate({ cacheName: 'static-resources' })
+);
+
+// ===============================
+// Push Notification
+// ===============================
 self.addEventListener('push', (event) => {
   console.log('[SW] Push received');
 
@@ -10,7 +35,7 @@ self.addEventListener('push', (event) => {
       title: 'Notifikasi',
       options: {
         body: 'Ada pesan baru',
-        data: { url: './#/stories' }, // default buka stories
+        data: { url: './#/stories' },
       },
     };
 
@@ -31,7 +56,6 @@ self.addEventListener('push', (event) => {
       }
     }
 
-    // Tambahin 2 tombol
     data.options.actions = [
       { action: 'open', title: 'Buka Aplikasi' },
       { action: 'close', title: 'Tutup' },
@@ -52,9 +76,8 @@ self.addEventListener('notificationclick', (event) => {
   if (event.action === 'open') {
     event.waitUntil(clients.openWindow(event.notification.data?.url || './'));
   } else if (event.action === 'close') {
-    // cukup dismiss
+    // dismiss aja
   } else {
-    // klik body notif
     event.waitUntil(clients.openWindow(event.notification.data?.url || './'));
   }
 });

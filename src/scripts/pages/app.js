@@ -13,7 +13,6 @@ import {
   generateUnsubscribeButtonTemplate,
 } from '../templates.js'; // path relatif sudah sesuai
 
-
 class App {
   #content;
   #drawerButton;
@@ -27,6 +26,7 @@ class App {
 
     this._setupDrawer();
     this._setupLogout();
+    this._setupNavigationClose(); // ✅ auto close navbar saat link diklik
 
     window.addEventListener('hashchange', () => this.renderPage());
     window.addEventListener('load', () => this.renderPage());
@@ -86,6 +86,14 @@ class App {
     });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') this.#navigationDrawer.classList.remove('open');
+    });
+  }
+
+  _setupNavigationClose() {
+    this.#navigationDrawer.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        this.#navigationDrawer.classList.remove('open'); // ✅ close drawer tiap klik menu
+      });
     });
   }
 

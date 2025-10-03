@@ -11,14 +11,14 @@ Kriteria 5: Dokumentasi Proyek
 ========================================
 
 Hasil Github Deploy:
-https://malvinstevanus304-cell.github.io/storyapp/#/login
+https://malvinstevanus304-cell.github.io/storyapp
 
 Cara Menjalankan Project:
 1. GIt Deploy:
-   git  deploy : https://malvinstevanus304-cell.github.io/Dicoding-Story-App/#/
+   git  deploy : https://malvinstevanus304-cell.github.io/storyapp
 
 2. Masuk ke folder project:
-   cd Dicoding-Story-App
+   cd Storyapp
 
 3. Install dependencies:
    npm install
