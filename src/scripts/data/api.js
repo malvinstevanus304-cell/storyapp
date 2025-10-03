@@ -28,3 +28,4 @@ export async function register(data) {
   });
   return res.json();
 }
+

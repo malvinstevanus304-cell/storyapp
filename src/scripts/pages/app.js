@@ -4,13 +4,15 @@ import { getActiveRoute } from '../routes/url-parser.js';
 import { getToken, clearToken } from '../utils/auth.js';
 import {
   isCurrentPushSubscriptionAvailable,
-  subscribepush,
-  unsubscribepush,
-} from '../push.js'; // path relatif sudah sesuai
+  subscribe,
+  unsubscribe,
+} from '../push.js';
+
 import {
   generateSubscribeButtonTemplate,
   generateUnsubscribeButtonTemplate,
 } from '../templates.js'; // path relatif sudah sesuai
+
 
 class App {
   #content;

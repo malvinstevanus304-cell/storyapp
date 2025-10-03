@@ -1,38 +1,60 @@
 // ===============================
-// Service Worker: Push Notification Only
+// Service Worker: Push Notification with Actions
 // ===============================
 
 self.addEventListener('push', (event) => {
   console.log('[SW] Push received');
 
   async function showNotification() {
-    let data = { title: 'Notifikasi', options: { body: 'Ada pesan baru' } };
+    let data = {
+      title: 'Notifikasi',
+      options: {
+        body: 'Ada pesan baru',
+        data: { url: './#/stories' }, // default buka stories
+      },
+    };
 
     if (event.data) {
       try {
-        // Coba parse JSON
-        data = await event.data.json();
-      } catch {
-        // Kalau bukan JSON, ambil sebagai string biasa
+        const json = await event.data.json();
         data = {
-          title: 'Notifikasi',
-          options: { body: event.data.text() },
+          title: json.title || 'Story Baru!',
+          options: {
+            body: json.body || 'Ada story baru dari temanmu 🚀',
+            icon: json.icon || './images/logo.png',
+            badge: json.badge || './images/logo.png',
+            data: json.data || { url: './#/stories' },
+          },
         };
+      } catch {
+        data.options.body = event.data.text();
       }
     }
 
-    await self.registration.showNotification(data.title, {
-      body: data.options.body,
-      icon: data.options.icon || './images/logo.png',
-      badge: data.options.badge || './images/logo.png',
-    });
+    // Tambahin 2 tombol
+    data.options.actions = [
+      { action: 'open', title: 'Buka Aplikasi' },
+      { action: 'close', title: 'Tutup' },
+    ];
+
+    return self.registration.showNotification(data.title, data.options);
   }
 
   event.waitUntil(showNotification());
 });
 
-// Optional: klik notifikasi
+// ===============================
+// Handle Klik Notifikasi
+// ===============================
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data?.url || './'));
+
+  if (event.action === 'open') {
+    event.waitUntil(clients.openWindow(event.notification.data?.url || './'));
+  } else if (event.action === 'close') {
+    // cukup dismiss
+  } else {
+    // klik body notif
+    event.waitUntil(clients.openWindow(event.notification.data?.url || './'));
+  }
 });

@@ -5,24 +5,20 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: {
     app: path.resolve(__dirname, 'src/scripts/index.js'),
-    sw: path.resolve(__dirname, 'src/public/sw.js'), // entry untuk service worker
+    sw: path.resolve(__dirname, 'src/public/sw.js'),
   },
   output: {
-    filename: '[name].bundle.js', // hasil: app.bundle.js dan sw.bundle.js
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true, // biar setiap build dist bersih dulu
+    clean: true,
   },
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
         test: /\.(png|jpe?g|gif|svg)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[name][ext]', // rapihin gambar di dist/images
+          filename: 'images/[name][ext]',
         },
       },
     ],
@@ -30,7 +26,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/index.html'),
-      excludeChunks: ['sw'], // jangan inject sw.bundle.js ke index.html
+      excludeChunks: ['sw'],
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -38,7 +34,7 @@ module.exports = {
           from: path.resolve(__dirname, 'src/public'),
           to: path.resolve(__dirname, 'dist'),
           globOptions: {
-            ignore: ['**/sw.js'], // sw.js jangan dicopy lagi, sudah jadi entry
+            ignore: ['**/sw.js'],
           },
         },
       ],

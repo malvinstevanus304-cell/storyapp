@@ -7,11 +7,8 @@ module.exports = merge(common, {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -19,10 +16,7 @@ module.exports = merge(common, {
     static: path.resolve(__dirname, 'dist'),
     port: 9000,
     client: {
-      overlay: {
-        errors: true,
-        warnings: true,
-      },
+      overlay: { errors: true, warnings: true },
     },
   },
 });
