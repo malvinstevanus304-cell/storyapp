@@ -61,10 +61,13 @@ export async function registerServiceWorker() {
   }
 
   try {
-    // Ganti '/sw.bundle.js' sesuai service worker orang yang ingin dipakai
-    const registration = await navigator.serviceWorker.register('./sw.bundle.js');
+    // Cari basePath project (misalnya /storyapp/)
+    const basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+    const swUrl = `${basePath}sw.bundle.js`;
+
+    const registration = await navigator.serviceWorker.register(swUrl);
     console.log('Service worker telah terpasang', registration);
-    return registration; // supaya bisa digunakan di index.js
+    return registration;
   } catch (error) {
     console.error('Failed to install service worker:', error);
   }
